@@ -290,7 +290,10 @@ class Storyteller(commands.Cog):
         r = requests.get(rolesUrl)
         editions = []
         for role in r.json():
-            edition = role['version'].split('-')[1].strip()
+            try:
+                edition = role['version'].split('-')[1].strip()
+            except IndexError:
+                continue
             if edition not in editions:
                 editions.append(edition)
         return editions
