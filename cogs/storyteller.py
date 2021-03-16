@@ -247,7 +247,6 @@ class Storyteller(commands.Cog):
 
         random.shuffle(selected)
         guild = ctx.message.guild
-        nums = []
         blackPerms = discord.PermissionOverwrite(read_messages=False)
         readPerms = discord.PermissionOverwrite(read_messages=True)
 
@@ -259,8 +258,10 @@ class Storyteller(commands.Cog):
         await cat.set_permissions(guild.default_role, read_messages=False)
 
         for channel in cat.text_channels:
+            logger.debug("Deleting old channel")
             await channel.delete()
 
+        nums = []
         setup_str = "```\n"
         for player, name in zip(players, p_names):
             while True:
@@ -278,12 +279,14 @@ class Storyteller(commands.Cog):
                                     player:readPerms,
                                     teller:readPerms,
                                     self.bot.user:readPerms})
+            logger.debug(f"Player '{name}' was assigned to role {role}. Channel created successfully.")
             setup_str += f"{name}: {role}\n"
         setup_str += f"```"
 
         embed = discord.Embed(title='Done', color=colors['Ok'])
         embed.add_field(name='These are the participating players and their roles', value=setup_str)
         await ctx.send(embed=embed)
+        logger.debug("Finished game setup")
 
 
     def getRoles(self, edition):
