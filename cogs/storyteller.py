@@ -245,7 +245,6 @@ class Storyteller(commands.Cog):
             selected.remove("Lunatic")
             selected.append(lunatic)
 
-        #z_players = dict(zip(players, p_names))
         random.shuffle(selected)
         guild = ctx.message.guild
         nums = []
@@ -262,6 +261,7 @@ class Storyteller(commands.Cog):
         for channel in cat.text_channels:
             await channel.delete()
 
+        setup_str = "```\n"
         for player, name in zip(players, p_names):
             while True:
                 n = int(random.random()*100)
@@ -272,12 +272,18 @@ class Storyteller(commands.Cog):
             name = f"{n:02d} - {name}"
             await player.edit(nick=name)
             nums.append(n)
-            channel = await cat.create_text_channel(selected.pop(),
+            role = selected.pop()
+            channel = await cat.create_text_channel(role,
                         overwrites={guild.default_role:blackPerms,
                                     player:readPerms,
                                     teller:readPerms,
                                     self.bot.user:readPerms})
-        await ctx.send(embed=discord.Embed(title='Done'))
+            setup_str += f"{name}: {role}\n"
+        setup_str += f"```"
+
+        embed = discord.Embed(title='Done', color=colors['Ok'])
+        embed.add_field(name='These are the participating players and their roles', value=setup_str)
+        await ctx.send(embed=embed)
 
 
     def getRoles(self, edition):
