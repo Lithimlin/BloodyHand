@@ -15,5 +15,6 @@ colors = {
 "Category:Outsiders": 0x183EFF,
 "Category:Townsfolk": 0x2096FF,
 "Category:Travelers": 0xc519ff,
-"Error": 0x550000
+"Error": 0x550000,
+"Ok": 0x005500
 }
